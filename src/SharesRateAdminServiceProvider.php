@@ -17,6 +17,10 @@ class SharesRateAdminServiceProvider extends ServiceProvider
         include __DIR__.'/routes.php';
         $this->app->make('Selfreliance\SharesRateAdmin\SharesRateAdminController');
         $this->loadViewsFrom(__DIR__.'/views', 'sharesrateadmin');
+
+        $this->publishes([
+            __DIR__.'/public/' => public_path('vendor/sharesrateadmin'),
+        ], 'assets');
     }
 
     /**
