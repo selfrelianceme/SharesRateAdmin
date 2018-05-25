@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Shares;
 use Carbon\Carbon;
 use App\Models\Shares\Share;
+use ConvertingCourses;
 class SharesRateAdminController extends Controller
 {
 	public function index(){
@@ -17,21 +18,10 @@ class SharesRateAdminController extends Controller
 
 	public function rate_info(Request $request, Share $share_model){
 		$share = Shares::getSharesListSingle()->where('id', $request->input('share_id'))->first();
-		$share->load(['full_rate'=>function($query){
-			$query->limit(30);
-		}]);
+		$share->full_rate = Shares::get_shares_rate($share);
 		Carbon::setLocale('ru');
-		// $share->full_rate->reverse()->each(function($row, $index) use ($share_model, $share){
-		// 	$tmp = $share->full_rate->where('id', '<=', $row->id);
-
-		// 	$row->percent_change_day = $share_model->change_percent($tmp, 1);
-		// 	$row->percent_change_week = $share_model->change_percent($tmp, 7);
-		// 	$row->percent_change_to_week = $share_model->change_percent($tmp, 14);
-		// 	$row->percent_change_to_month = $share_model->change_percent($tmp, 30);			
-		// });
-		$share->full_rate->sortByDesc('available_at');
-		
 		$available_at = Carbon::now();
+		$share->rate->price_in_dollar = ConvertingCourses::convert_amount($share->rate->price_per_share, $share->couple->currency, "USD");
 		return view('sharesrateadmin::fill_rate')->with(compact('share', 'available_at'));
 	}
 

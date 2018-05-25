@@ -6,7 +6,7 @@
 	    <div class="col-12">
 	        <div class="card">
 	            <div class="card-block">
-					<h4 class="card-title">Курсы акций {{$share->couple->title}}, {{$share->couple->currency}}. Текущий курс {{$share->rate->price_per_share}} {{$share->currency}}</h4>
+					<h4 class="card-title">Курсы акций {{$share->couple->title}}, {{$share->couple->currency}}. Текущий курс {{$share->rate->price_per_share}} {{$share->currency}} ({{$share->rate->price_in_dollar}} USD)</h4>
 					<div class="m-t-10 m-b-10" id="chart"></div>
                     <hr/>
                     @if(Session::has('error'))
@@ -71,11 +71,13 @@
 				                            	$class = 'none';
 				                            @endphp
 			                            @endif
-			                            <tr>
+			                            <tr style="background: {{($row->id == $share->rate->id)?'#1c68ff54':NULL}}">
 			                                <td>#{{$row->id}}</td>
 			                                <td>{{$row->available_at->diffForHumans()}}</td>
 			                                <td><a href="#" data-id="{{$row->id}}" class="inline-dob{{$class}}" data-type="combodate" data-value="{{$row->available_at}}" data-format="YYYY-MM-DD HH:mm:ss" data-viewformat="YYYY-MM-DD HH:mm:ss" data-template="YYYY-MMM-D HH:mm:ss" data-pk="{{$row->id}}" data-title="Select Date of birth">{{$row->available_at}}</a></td>
-			                                <td><a href="#" data-id="{{$row->id}}" class="inline-rate{{$class}}" data-type="text" data-pk="{{$row->id}}" data-title="Enter rate">{{$row->price_per_share}}</a> {{$share->currency}}</td>
+			                                <td>
+			                                	<a href="#" data-id="{{$row->id}}" class="inline-rate{{$class}}" data-type="text" data-pk="{{$row->id}}" data-title="Enter rate">{{$row->price_per_share}}</a> {{$share->currency}} ({{$row->price_dollar}} USD)
+			                                </td>
 			                                {{--<td>
 			                                	<a href="{{route('AdminSharesRatePercentageGrowth', $row->id)}}">Проценты роста </a>
 			                                </td>--}}
@@ -85,7 +87,10 @@
 	                            @endif
 	                        </tbody>
 	                    </table>
-	            	</div>                
+	            	</div>
+	            	<nav aria-label="Page navigation example" class="m-t-40">
+		                {{ $share->full_rate->links('vendor.pagination.bootstrap-4') }}
+		            </nav>                
 	            </div>
 	        </div>
 	    </div>
@@ -101,6 +106,9 @@
     	.cd-horizontal-timeline .events a{
     		padding-bottom: 5px!important;
     	}
+		.pagination {
+			justify-content: center;
+		}
     </style>
     @push('scripts')
 	    <link href="{{ asset('vendor/adminamazing/assets/plugins/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css') }}" rel="stylesheet">
