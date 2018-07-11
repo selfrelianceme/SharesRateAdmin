@@ -46,6 +46,12 @@ class SharesRateAdminController extends Controller
 			$percent = $request['percent'][$key];
 			if($pm != '0' && $percent != '0'){
 				$parse = Carbon::parse($value);
+				$now_date = Carbon::now();
+				if($now_date > $parse){
+					\Session::flash('error', 'Нельзя добавлять курс для прошлого');
+        			return redirect()->back();
+					break;
+				}
 				if($pm == 'plus'){
 					$new_price = number(($share->rate->price_per_share+($share->rate->price_per_share*$percent/100)),8);
 				}elseif($pm == 'minus'){
