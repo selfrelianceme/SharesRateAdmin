@@ -17,10 +17,18 @@
 	                @endif
                     <form class="form" method="POST" action="{{route('AdminSharesRateStore')}}">
 	                    @for($i=0;$i<3;$i++)
+	                    	@php
+	                    		$add_hourse = 12;
+	                    	@endphp
+	                    	@if($i == 0)
+	                    		@php
+	                    			$add_hourse = 0;
+	                    		@endphp
+	                    	@endif
 							<div class="row">
 			                    <div class="form-group col-12 col-lg-5">
 		                            <label for="available_at{{$i}}">Доступно с</label>
-		                            <input type="text" class="form-control datepicker" name="available_at[]" class="form-control" placeholder="{{$available_at->addHours(12)->format('Y-m-d H:i:s')}}" id="available_at{{$i}}" value="{{$available_at->addHours(12)->format('Y-m-d H:i:s')}}">
+		                            <input type="text" class="form-control datepicker" name="available_at[]" class="form-control" placeholder="{{$available_at->addHours($add_hourse)->format('Y-m-d H:i:s')}}" id="available_at{{$i}}" value="{{$available_at->addHours($add_hourse)->format('Y-m-d H:i:s')}}">
 		                        </div>
 		                        <div class="col-12 col-lg-2">
 		                            <label for="plus_minus{{$i}}">Плюс/Минус</label>
